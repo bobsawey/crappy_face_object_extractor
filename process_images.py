@@ -3,8 +3,10 @@ import cv2
 from matplotlib import pyplot as plt
 
 import find_skin as skin
+import detect_faces as faces
 
 original, newimg = skin.find_skin('data_processed_1/1.png')
+original, newimg = faces.detect_faces('data_processed_1/1.png')
 
 plt.subplot(121)
 plt.imshow(original)
