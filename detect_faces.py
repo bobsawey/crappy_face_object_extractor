@@ -7,28 +7,18 @@ import argparse
 import cv2
 
 def detect_faces(image_path):
-    # construct the argument parse and parse the arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--image", required=True,
-        help="path to input image")
-    ap.add_argument("-p", "--prototxt", required=True,
-        help="path to Caffe 'deploy' prototxt file")
-    ap.add_argument("-m", "--model", required=True,
-        help="path to Caffe pre-trained model")
-    ap.add_argument("-c", "--confidence", type=float, default=0.5,
-        help="minimum probability to filter weak detections")
-    args = vars(ap.parse_args())
 
-    prototxt = 'models/detect_faces.deploy.prototxt.txt'
-    model = 'modles/detect_faces.res10_300x300_ssd_iter_140000.caffemodel'
+    args_prototxt = 'models/detect_faces.deploy.prototxt.txt'
+    args_model = 'models/detect_faces.res10_300x300_ssd_iter_140000.caffemodel'
+    args_confidence = 0.5;
 
     # load our serialized model from disk
     print("[INFO] loading model...")
-    net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
+    net = cv2.dnn.readNetFromCaffe(args_prototxt, args_model)
 
     # load the input image and construct an input blob for the image
     # by resizing to a fixed 300x300 pixels and then normalizing it
-    image = cv2.imread(args["image"])
+    image = cv2.imread(image_path)
     (h, w) = image.shape[:2]
     blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 1.0,
         (300, 300), (104.0, 177.0, 123.0))
@@ -47,7 +37,7 @@ def detect_faces(image_path):
 
         # filter out weak detections by ensuring the `confidence` is
         # greater than the minimum confidence
-        if confidence > args["confidence"]:
+        if confidence > args_confidence:
             # compute the (x, y)-coordinates of the bounding box for the
             # object
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
@@ -63,5 +53,4 @@ def detect_faces(image_path):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
     # show the output image
-    cv2.imshow("Output", image)
-    cv2.waitKey(0)
+    return image

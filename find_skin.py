@@ -118,6 +118,6 @@ def find_skin(image_path):
     #plt.imshow(image_YCbCr)
     #plt.title('New')
     #plt.show()
-    return test_image, image_YCbCr
+    return image_YCbCr
 
 #proof method works: find_skin('../../data_processed_1/1.png')

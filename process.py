@@ -5,8 +5,21 @@ from matplotlib import pyplot as plt
 import find_skin as skin
 import detect_faces as faces
 
-original, newimg = skin.find_skin('data_processed_1/1.png')
-original, newimg = faces.detect_faces('data_processed_1/1.png')
+image_path = 'data_processed_1/1.png'
+original = cv2.imread(image_path)
+newimg = skin.find_skin(image_path)
+
+
+#newimg = faces.detect_faces(image_path)
+
+
+
+"""
+
+cv2.imwrite('detect2.png',image)
+cv2.imshow("Output", image)
+cv2.waitKey(0)
+"""
 
 plt.subplot(121)
 plt.imshow(original)
@@ -15,6 +28,7 @@ plt.subplot(122)
 plt.imshow(newimg)
 plt.title('News')
 plt.show()
+""""""
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 #
