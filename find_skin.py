@@ -121,3 +121,62 @@ def find_skin(image_path):
     return image_YCbCr
 
 #proof method works: find_skin('../../data_processed_1/1.png')
+
+def show_skin(image_path):
+    img = cv2.imread(image_path)
+    ################################################################################
+
+    print('YCbCr-RGB Skin Model')
+
+    rows, cols, channels = img.shape
+    ################################################################################
+
+    # convert color space from rgb to ycbcr
+    imgYcc = cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
+
+    # convert color space from bgr to rgb
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # prepare an empty image space
+    imgSkin = np.zeros(img.shape, np.uint8)
+    # copy original image
+    imgSkin = img.copy()
+    ################################################################################
+
+    for r in range(rows):
+        for c in range(cols):
+
+            # non-skin area if skin equals 0, skin area otherwise
+            skin = 0
+            ########################################################################
+
+            # get values from rgb color space
+            R = img.item(r, c, 0)
+            G = img.item(r, c, 1)
+            B = img.item(r, c, 2)
+
+            # get values from ycbcr color space
+            Y = imgYcc.item(r, c, 0)
+            Cr = imgYcc.item(r, c, 1)
+            Cb = imgYcc.item(r, c, 2)
+            ########################################################################
+
+            # skin color detection
+
+            if R > G and R > B:
+                if (G >= B and 5 * R - 12 * G + 7 * B >= 0) or (G < B and 5 * R + 7 * G - 12 * B >= 0):
+                    if Cr > 135 and Cr < 180 and Cb > 85 and Cb < 135 and Y > 80:
+                        skin = 1
+                        # print 'Skin detected!'
+
+            if 0 == skin:
+                imgSkin.itemset((r, c, 0), 0)
+                imgSkin.itemset((r, c, 1), 0)
+                imgSkin.itemset((r, c, 2), 0)
+
+    # display original image and skin image
+
+    ################################################################################
+
+    print('Goodbye!')
+    return imgSkin
