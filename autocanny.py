@@ -4,7 +4,37 @@ import argparse
 import glob
 import cv2
 
-def auto_canny(image, sigma=0.33):
+def canny_op(image_path, op=0):
+    switcher = {
+        1: wide_canny(image_path)
+        2: tight_canny(image_path)
+        3: auto_canny(image_path)
+    }
+    new_image = switcher.get(op, lambda: "Invalid Canny Operation ( autocanny.py )")
+    return new_image
+
+def wide_canny(image_path):
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+
+    # apply Canny edge detection using a wide threshold, tight
+    # threshold, and automatically determined threshold
+    wide = cv2.Canny(blurred, 10, 200)
+    return wide
+
+def tight_canny(image_path):
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+    tight = cv2.Canny(blurred, 225, 250)
+    return tight
+
+def auto_canny(image_path, sigma=0.33):
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+
     # compute the median of the single channel pixel intensities
     v = np.median(image)
 
@@ -15,6 +45,12 @@ def auto_canny(image, sigma=0.33):
 
     # return the edged image
     return edged
+
+def wide_canny(image_path)
+    return wide_canny_image
+
+def tight_canny
+    return tight_canny_image
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()

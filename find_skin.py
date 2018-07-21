@@ -59,7 +59,7 @@ def find_skin(image_path):
     Theta = 2.53 / np.pi * 180
     # 每行
     for row in range(shape[0]):
-        print(row)
+        
         # 每列
         for col in range(shape[1]):
             Y = image_YCbCr[row, col, 0]
