@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 import itertools
+from random import shuffle
+from itertools import product
 #random words for filenames
 from random_word import RandomWords
 
@@ -17,6 +19,7 @@ import grp
 #for plotting
 from matplotlib import pyplot as plt
 import matplotlib as mpl
+import matplotlib.gridspec as gridspec
 
 #our local modules
 import find_skin as skin
@@ -27,29 +30,88 @@ data_path = 'data_processed_1'
 mpl.rcParams['savefig.pad_inches'] = 0
 images_to_process = [f for f in listdir(data_path) if isfile(join(data_path, f))]
 
+current_count = 0
 #process all images and save to new directory if does not yet exist
+
+shuffle(images_to_process)
 for filename in images_to_process:
-
-    def plot_image(ax, processed_image, fontsize=12, nodec=False):
-        ax.plot([1, 2])
-        ax.imshow(processed_image)
-
-        ax.locator_params(nbins=3)
-        if not nodec:
-            ax.set_xlabel('x-label', fontsize=fontsize)
-            ax.set_ylabel('y-label', fontsize=fontsize)
-            ax.set_title('Title', fontsize=fontsize)
-        else:
-            ax.set_xticklabels('')
-            ax.set_yticklabels('')
 
     #set image path
     image_path = "{}/{}".format(data_path, filename)
 
+    #original image
+    original = cv2.imread(image_path)
+    image_heap = cv2.imread(image_path)
+
+
+
+    original = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+    gray_af = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    happy_tree = cv2.applyColorMap(gray_af, cv2.COLORMAP_HSV)
+    sonic_fux = cv2.applyColorMap(gray_af, cv2.COLORMAP_RAINBOW)
+    plt.rcParams['savefig.facecolor'] = "0.3"
+    def plot_image(ax, fontsize=12, nodec=False):
+        global image_heap
+
+        #im sure this means *something*
+        ax.plot([1, 2])
+
+        #switches between processes to run on images
+        switcher = {
+                1: skin.find_skin(image_path),
+                2: skin.show_skin(image_path),
+                3: faces.detect_faces(image_path),
+                4: autocanny.canny_op(image_path,0), # 0 = wide_canny
+                5: autocanny.canny_op(image_path,1), # 1 = tight_canny
+                6: autocanny.canny_op(image_path,2), # 2 = auto_canny
+                7: original,
+                8: sonic_fux,
+                9: happy_tree,
+                #10: cv2.imread(image_path),
+                #11: cv2.imread(image_path),
+                #12: cv2.imread(image_path),
+                #13: cv2.imread(image_path),
+                #14: cv2.imread(image_path),
+                #15: cv2.imread(image_path),
+                #16: cv2.imread(image_path),
+            }
+
+        #assign new image based on an operation, see bove
+        new_image = switcher.get(count, lambda:"invalid image processor")
+
+        img1 = image_heap
+        img2 = new_image
+
+        h1, w1 = img1.shape[:2]
+        h2, w2 = img2.shape[:2]
+
+        #create empty matrix
+        vis = np.zeros((h1+h2, max(w1,w2),3), np.uint8)
+
+
+
+
+
+        #add new_image to this
+        ax.imshow(new_image)
+        #no idea what this does
+        ax.locator_params(nbins=3)
+
+        #no idea what this does
+        if not nodec:
+            ax.set_xlabel('x-label', fontsize=fontsize)
+            ax.set_ylabel('y-label', fontsize=fontsize)
+            ax.set_title('Title', fontsize=fontsize)
+
+        #not a f_cking clue.
+        else:
+            ax.set_xticklabels('')
+            ax.set_yticklabels('')
+
     #create and store output directory path
     output_dir = "processed_images"
 
-    #random word for filenames
+    #random sonic_fuxword for filenames
     r = RandomWords()
 
     #get random word for filenames
@@ -57,7 +119,6 @@ for filename in images_to_process:
 
     #output_filname_and_path
     output_path_and_filename = "{}/{}.{}".format(output_dir, filename_random_word, filename )
-    print(output_path_and_filename)
 
 
     #variables for chowning after creating the directory
@@ -69,8 +130,9 @@ for filename in images_to_process:
     chmod(output_dir, 493)
     #
 
-    fig, axs = plt.subplots(4, 4, constrained_layout=True)
+    fig, axs = plt.subplots(3, 3, constrained_layout=True)
 
+    plt.rcParams['savefig.facecolor'] = "0.8"
     count = 0
 
     # Note on axs.flatten():
@@ -78,61 +140,71 @@ for filename in images_to_process:
             # this is because subplots are 4,4
         # to make the array 16 items long, we use axs.flatten()
 
-    switcher = {
-            1: skin.find_skin(image_path),
-            2: skin.show_skin(image_path),
-            3: faces.detect_faces(image_path)(image_path),
-            4: autocanny.auto_canny(image_path,0), # 0 = wide_canny
-            5: autocanny(image_path,1), # 1 = tight_canny
-            6: autocanny(image_path,2), # 2 = auto_canny
-            7: cv2.imread(image_path),
-            8: cv2.imread(image_path),
-            9: cv2.imread(image_path),
-            10: cv2.imread(image_path),
-            11: cv2.imread(image_path),
-            12: cv2.imread(image_path),
-            13: cv2.imread(image_path),
-            14: cv2.imread(image_path),
-            15: cv2.imread(image_path),
-            16: cv2.imread(image_path),
-        }
+    #RUN A PLOT OF 9 IMAGES FOR EACH IMAGE
+        # THEN SAVE
     for ax in axs.flatten():
         count+=1
-        print(count)
-        #run one of 16 processes on each image
-        new_image = switcher.get(count, lambda:"invalid image processor")
-
-        plot_image(ax, new_image ,nodec=True)
+        #run one of 9 processes on each image
+        plot_image(ax, nodec=True)
         ax.set_xticklabels('')
         ax.set_yticklabels('')
+
+    #SOME B_LLSH1T ABOUT CONSTRAINTS
     fig.set_constrained_layout_pads(w_pad=4./72., h_pad=4./72.,
             hspace=0., wspace=0.)
 
 
+    #make the bg gray and not total eyeball murde
+    #save the fig with unique png name
 
-    '''
-    plt.autoscale(tight=True)
-    plt.rcParams['savefig.facecolor'] = ".3"
-    plt.subplot(441)
-    plt.subplots_adjust(hspace = .001)
-    plt.axis('off')
-    plt.tight_layout()
-    plt.imshow(original)
-    plt.title('Original')
-    plt.subplot(442)
-    plt.subplots_adjust(hspace = .001)
-    plt.axis('off')
-    plt.tight_layout()
-    plt.imshow(newimg)
-    plt.title('Newww')
-    plt.axis('off')
-    plt.tight_layout()
-    plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
-    '''
+    print(mpl.get_backend())
+    manager = plt.get_current_fig_manager()
+    manager.frame.Maximize(True)
     plt.savefig(output_path_and_filename)
-    plt.show()
-    break
+
+
+
+
     #plt.show()
+
+    """
+    - THIS IS TO GET A GRID LOOKING SWELL IF I REALLY START CARING THAT MUCH
+    -
+    fig = plt.figure(figsize=(8, 8))
+
+    # gridspec inside gridspec
+    outer_grid = gridspec.GridSpec(4, 4, wspace=0.0, hspace=0.0)
+
+    for i in range(16):
+        inner_grid = gridspec.GridSpecFromSubplotSpec(
+          3, 3, subplot_spec=outer_grid[i], wspace=0.0, hspace=0.0)
+        a, b = int(i/4)+1, i % 4+1
+        for j, (c, d) in enumerate(product(range(1, 4), repeat=2)):
+            ax = plt.Subplot(fig, inner_grid[j])
+            ax.imshow(new_image)
+            #ax.plot(*squiggle_xy(a, b, c, d))
+            ax.set_xticks([])
+            ax.set_yticks([])
+            fig.add_subplot(ax)
+
+    all_axes = fig.get_axes()
+
+    # show only the outside spines
+    for ax in all_axes:
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        if ax.is_first_row():
+            ax.spines['top'].set_visible(True)
+        if ax.is_last_row():
+            ax.spines['bottom'].set_visible(True)
+        if ax.is_first_col():
+            ax.spines['left'].set_visible(True)
+        if ax.is_last_col():
+            ax.spines['right'].set_visible(True)
+
+    plt.show()
+    #plt.show()
+    """
 
 #newimg = faces.detect_faces(image_path)
 #newimg = cv2.cvtColor(newimg, cv2.COLOR_BGR2RGB)
@@ -169,16 +241,3 @@ cv2.waitKey(0)
 
 
 """"""
-#!/usr/bin/python3
-# -*- coding:utf-8 -*-
-#
-#  Find skin module
-#
-#
-# !/usr/bin/env python
-# encoding=utf-8
-# -------------------------------------------------------------------------------
-# Name:        test
-# Author:      xiezhanghua (xiezhanghua111@j163.com)
-# Created:     2017/8/13下午12:06
-# -------------------------------------------------------------------------------

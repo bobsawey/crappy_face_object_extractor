@@ -6,9 +6,9 @@ import cv2
 
 def canny_op(image_path, op=0):
     switcher = {
-        1: wide_canny(image_path)
-        2: tight_canny(image_path)
-        3: auto_canny(image_path)
+        0: wide_canny(image_path),
+        1: tight_canny(image_path),
+        2: auto_canny(image_path),
     }
     new_image = switcher.get(op, lambda: "Invalid Canny Operation ( autocanny.py )")
     return new_image
@@ -28,6 +28,7 @@ def tight_canny(image_path):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (3, 3), 0)
     tight = cv2.Canny(blurred, 225, 250)
+    
     return tight
 
 def auto_canny(image_path, sigma=0.33):
@@ -45,7 +46,7 @@ def auto_canny(image_path, sigma=0.33):
 
     # return the edged image
     return edged
-
+"""
 def wide_canny(image_path)
     return wide_canny_image
 
@@ -75,3 +76,4 @@ for imagePath in glob.glob(args["images"] + "/poop_omg.jpg"):
     cv2.imshow("Original", image)
     cv2.imshow("Edges", np.hstack([wide, tight, auto]))
     cv2.waitKey(0)
+"""

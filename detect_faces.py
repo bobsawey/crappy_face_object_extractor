@@ -53,4 +53,6 @@ def detect_faces(image_path):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
     # show the output image
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
     return image

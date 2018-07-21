@@ -24,6 +24,7 @@ Output: image_YCbCr
 
 def find_skin(image_path):
 
+    print("finding skin ( creepy )")
     #Create Test Image
     test_image = cv2.imread(image_path)
 
@@ -59,7 +60,7 @@ def find_skin(image_path):
     Theta = 2.53 / np.pi * 180
     # 每行
     for row in range(shape[0]):
-        
+
         # 每列
         for col in range(shape[1]):
             Y = image_YCbCr[row, col, 0]
