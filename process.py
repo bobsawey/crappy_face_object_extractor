@@ -49,7 +49,7 @@ for filename in images_to_process:
     gray_af = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     happy_tree = cv2.applyColorMap(gray_af, cv2.COLORMAP_HSV)
     sonic_fux = cv2.applyColorMap(gray_af, cv2.COLORMAP_RAINBOW)
-    plt.rcParams['savefig.facecolor'] = "0.3"
+    plt.rcParams['savefig.facecolor'] = "0.8"
     def plot_image(ax, fontsize=12, nodec=False):
         global image_heap
 
@@ -79,15 +79,12 @@ for filename in images_to_process:
         #assign new image based on an operation, see bove
         new_image = switcher.get(count, lambda:"invalid image processor")
 
-        img1 = image_heap
-        img2 = new_image
+        dr = RandomWords()
 
-        h1, w1 = img1.shape[:2]
-        h2, w2 = img2.shape[:2]
-
-        #create empty matrix
-        vis = np.zeros((h1+h2, max(w1,w2),3), np.uint8)
-
+        #get random word for filenames
+        rdmwd1 = dr.get_random_word()
+        rdmwd2 = dr.get_random_word()
+        indy_img_dir= "{}/{}.{}.png".format("processed_images/individual_images", rdmwd1, rdmwd2 )
 
 
 
@@ -96,6 +93,8 @@ for filename in images_to_process:
         ax.imshow(new_image)
         #no idea what this does
         ax.locator_params(nbins=3)
+        status = cv2.imwrite(indy_img_dir, new_image)
+        print("Image written to file-system : ",status)
 
         #no idea what this does
         if not nodec:
@@ -150,16 +149,15 @@ for filename in images_to_process:
         ax.set_yticklabels('')
 
     #SOME B_LLSH1T ABOUT CONSTRAINTS
-    fig.set_constrained_layout_pads(w_pad=4./72., h_pad=4./72.,
-            hspace=0., wspace=0.)
+    #fig.set_constrained_layout_pads(w_pad=4./72., h_pad=4./72.,
+    #        hspace=0., wspace=0.)
 
 
     #make the bg gray and not total eyeball murde
     #save the fig with unique png name
-
-    print(mpl.get_backend())
+    fig.set_size_inches(10,10);
     manager = plt.get_current_fig_manager()
-    manager.frame.Maximize(True)
+    manager.resize(*manager.window.maxsize())
     plt.savefig(output_path_and_filename)
 
 
