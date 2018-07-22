@@ -5,3 +5,5 @@ reference
 reference/*
 tests
 tests/*
+__pycache__
+__pycache__/*
