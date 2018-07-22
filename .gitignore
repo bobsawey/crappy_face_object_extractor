@@ -3,3 +3,5 @@ data*
 processed_images/*
 reference
 reference/*
+tests
+tests/*
