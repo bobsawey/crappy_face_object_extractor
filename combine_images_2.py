@@ -2,9 +2,12 @@
 
 
 # original snippet found
+from scipy import misc
 import cv2
 import numpy as np
 from PIL import Image
+from seam_carver import intelligent_resize
+from random_word import RandomWords
 # adding random integeger support
 from random import randint
 
@@ -49,11 +52,13 @@ def make_array():
     from PIL import Image
     from os import listdir
     from os.path import isfile, join
+    import detect_faces as faces
+
     data_path = '_data_2'
     list_im = [
         f for f in listdir(data_path) if isfile(join(data_path, f))]
     #return np.array([np.asarray(Image.open(f'{data_path}/{i}').convert('RGB')) for i in list_im[:16]])
-    return np.array([np.asarray(skin.show_skin(f'{data_path}/{i}')) for i in list_im[:16]])
+    return np.array([np.asarray(faces.detect_faces(f'{data_path}/{i}')) for i in list_im[:16]])
 
 
 
@@ -69,6 +74,15 @@ def find_skin_from_array():
 
 result = cv2.cvtColor(result,cv2.COLOR_BGR2RGB)
 cv2.imshow('image',result)
-cv2.imwrite('nuggets.png',result)
+
+
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+dr = RandomWords()
+
+#get random word for filenames
+rdmwd1 = dr.get_random_word()
+rdmwd2 = dr.get_random_word()
+indy_img_dir= "{}/{}.{}.png".format("processed_images/individual_images", rdmwd1, rdmwd2 )
+cv2.imwrite(f"{indy_img_dir}",result)

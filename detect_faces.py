@@ -10,7 +10,7 @@ def detect_faces(image_path):
 
     args_prototxt = 'models/detect_faces.deploy.prototxt.txt'
     args_model = 'models/detect_faces.res10_300x300_ssd_iter_140000.caffemodel'
-    args_confidence = 0.5;
+    args_confidence = 0.9;
 
     # load our serialized model from disk
     print("[INFO] loading model...")

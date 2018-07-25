@@ -1,5 +1,6 @@
 import numpy as np, cv2
 
+
 imageFile1 = "data_processed_1/1.png"
 imageFile2 = "data_processed_1/2.png"
 

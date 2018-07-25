@@ -7,3 +7,9 @@ tests
 tests/*
 __pycache__
 __pycache__/*
+_data*
+detect-face-parts*
+go_experiments*
+features*
+models*
+alpha_playgroud*
