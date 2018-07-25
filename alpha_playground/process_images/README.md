@@ -1,1 +1,0 @@
-# crappy_face_object_extractor
