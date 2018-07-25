@@ -15,3 +15,7 @@ models
 models/*
 alpha_playground
 alpha_playground/*
+notes.txt
+*.png
+ws_tests
+ws_tests/*

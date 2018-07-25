@@ -45,7 +45,7 @@ for filename in images_to_process:
 
 
 
-    original = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+    original = cv2.cvtColor(original, cv2.COLOR_RGB2BGR)
     gray_af = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     happy_tree = cv2.applyColorMap(gray_af, cv2.COLORMAP_HSV)
     sonic_fux = cv2.applyColorMap(gray_af, cv2.COLORMAP_RAINBOW)
@@ -64,7 +64,7 @@ for filename in images_to_process:
                 4: autocanny.canny_op(image_path,0), # 0 = wide_canny
                 5: autocanny.canny_op(image_path,1), # 1 = tight_canny
                 6: autocanny.canny_op(image_path,2), # 2 = auto_canny
-                7: original,
+                7: cv2.cvtColor(original, cv2.COLOR_RGB2BGR),
                 8: sonic_fux,
                 9: happy_tree,
                 #10: cv2.imread(image_path),
@@ -84,16 +84,18 @@ for filename in images_to_process:
         #get random word for filenames
         rdmwd1 = dr.get_random_word()
         rdmwd2 = dr.get_random_word()
-        indy_img_dir= "{}/{}.{}.png".format("processed_images/individual_images", rdmwd1, rdmwd2 )
+        indy_img_dir= "{}/{}.{}.{}.png".format("processed_images/individual_images",  filename, rdmwd1, rdmwd2 )
 
 
 
 
         #add new_image to this
-        ax.imshow(new_image)
+        #ax.imshow(new_image)
         #no idea what this does
         ax.locator_params(nbins=3)
+
         status = cv2.imwrite(indy_img_dir, new_image)
+
         print("Image written to file-system : ",status)
 
         #no idea what this does

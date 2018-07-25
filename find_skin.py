@@ -178,6 +178,6 @@ def show_skin(image_path):
     # display original image and skin image
 
     ################################################################################
-
+    imgSkin = cv2.cvtColor(imgSkin, cv2.COLOR_RGB2BGR)
     print('Goodbye!')
     return imgSkin
