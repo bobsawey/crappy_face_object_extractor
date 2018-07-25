@@ -11,6 +11,7 @@ _data*
 detect-face-parts*
 go_experiments*
 features*
-models*
+models
+models/*
 alpha_playground
 alpha_playground/*
