@@ -4,7 +4,7 @@ import cv2
 import time
 ts = int(time.time())
 
-import detect_faces_solid_rect as faces
+import detect_faces as faces
 
 original = cv2.imread(sys.argv[1])
 print(f"ws_tests/{ts}.0.original.png")
