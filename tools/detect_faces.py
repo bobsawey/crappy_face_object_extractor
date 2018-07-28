@@ -5,6 +5,7 @@
 import numpy as np
 import argparse
 import cv2
+import math
 
 def detect_faces(image_path):
 
@@ -40,7 +41,7 @@ def detect_faces(image_path):
         if confidence > args_confidence:
             # compute the (x, y)-coordinates of the bounding box for the
             # object
-            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            box = detections[0, 2.250, i, 3:7] * np.array([w, h, w, h])
             (startX, startY, endX, endY) = box.astype("int")
 
             # draw the bounding box of the face along with the associated
@@ -111,8 +112,10 @@ def get_rects(image_path):
             y = startY - 10 if startY - 10 > 10 else startY + 10
             #cv2.rectangle(image, (startX, startY), (endX, endY),
                 #(0, 0, 255), 1)
-            paddingY = abs(int((endY-startY)*1.22-(endY-startY)))
-            paddingX = abs(int((endX-startX)*1.67-(endY-startY)))
+
+            paddingY = int((startY/4)*math.e)
+            paddingX = int((startX/4)*math.e/2)
+
             print((startY-paddingY))
             print(endY+paddingY)
             print(f"endy{endY}")
@@ -125,11 +128,11 @@ def get_rects(image_path):
             crop = image[startY-paddingY:endY+endY+paddingY,startX-paddingX:endX+endX+paddingX]
             #print(crop)
             print(paddingY)
-            #cv2.imshow("cropped", crop)
+            #cv2.imshow("cropped", crop)paddingX
             #cv2.waitKey(0)
             image = crop
-            rect_tuple = (startX-paddingY, startY-paddingY, endX+paddingX, endY+paddingX )
-            tup_tup = (startX-paddingX, startY-paddingY), (endX+paddingX, endY+paddingY)
+            rect_tuple = (startX-paddingX, startY-paddingY, int(endX+((500-endX)/4)*math.e), 500 )
+            tup_tup = (startX-paddingX, startY-paddingY),( int( endX+ ((500-endX)  /4)  *math.e), 500)
             #ftangle = cv2.rectangle(image, (startX-padding, startY-padding), (endX+padding, endY+padding),
             #    (0, 0, 255), 1)
             print(startX, startY,endX,endY)

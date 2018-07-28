@@ -4,5 +4,5 @@
 First...add png images to data_processed_1
 Then..
 ```
-python3 extract.py
+python3 extract.py images_to_process_dir proccessed_images_dir
 ```
